@@ -1,25 +1,27 @@
 package main
 
 import (
-	"log"
-	"github.com/KeshikaGupta20/Postgresql_GO/router"
-	"github.com/KeshikaGupta20/Postgresql_GO/database"
+	"fmt"
 
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/KeshikaGupta20/Postgresql_GO/database"
+	"github.com/KeshikaGupta20/Postgresql_GO/router"
+	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
 func main() {
 
-	app := fiber.New()
+	r := gin.Default()
 
-	app.Use(logger.New())
+	godotenv.Load()
 
-	database.Database()
+	database.ConnectDB()
 
-	router.RegisterRoutes(app)
-	log.Fatal(app.Listen(":3000"))
+	fmt.Println("Server started at port 4000")
 
+	router.RegisterRoutes(r)
+
+	r.Run(":3000")
 }

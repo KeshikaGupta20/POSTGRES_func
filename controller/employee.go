@@ -1,86 +1,71 @@
 package controller
 
 import (
+	"net/http"
+
 	"github.com/KeshikaGupta20/Postgresql_GO/database"
 	"github.com/KeshikaGupta20/Postgresql_GO/models"
+	"github.com/gin-gonic/gin"
 
-	"github.com/gofiber/fiber/v2"
+	
 )
 
+func AddEmployee(c *gin.Context) {
 
-func AddEmployee(c *fiber.Ctx) error {
 	db := database.DB
 
-	emp := new(models.Employee)
+	emp := models.Employee{}
 
-	c.BodyParser(emp)
-	
-	db.Create(&emp)
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+	c.BindJSON(&emp)
 
-		"Message": "Employee added sucessfully",
-	})
+	db.Exec("Call Employ($1, $2) ", "name", "empid").Scan(&models.Employee{})
+
+	c.JSON(http.StatusOK, gin.H{"message": "Employee table created successfully"})
+
+}
+
+func DeleteEmployee(c *gin.Context){
+
+	ID := c.Param("empid")
+
+	db := database.DB
+
+	var employee models.Employee
+
+	db.Find(&employee, ID)
+
+	db.Delete(&employee, ID)
+
+	c.JSON(http.StatusOK, gin.H{"message": "Employee table created successfully"})
 
 }
 
 
-func DeleteEmployee(c *fiber.Ctx) error {
 
-	ID := c.Params("empid")
-
-	db := database.DB
-
-	var employee []models.Employee = make([]models.Employee, 0)
-
-	db.Find(c.Context(),&employee, ID)
-
-	db.Delete(&employee)
-
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-
-		"Message": "Product deleted sucessfully",
-	})
-}
-
-
-//to reterive all employee details
-func GetEmployees(c *fiber.Ctx) error {
-	
-	db := database.DB
-
-	var employee []models.Employee = make([]models.Employee, 0)
-
-	db.Find(c.Context(),&employee)
-
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-
-		"success": true,
-		"data": fiber.Map{
-			"Emp": employee,
-		},
-	})
-
-}
-
-//to reterive single employee details
-func GetEmployee(c *fiber.Ctx) error {
-
-	ID := c.Params("empid")
+func GetEmployees(c *gin.Context) {
 
 	db := database.DB
 
-	var employee []models.Employee = make([]models.Employee, 0)
+	var employee models.Employee
 
-	db.Find(c.Context(),&employee, ID)
+	db.Find(&employee)
 
-	return c.JSON(fiber.Map{
+	c.JSON(http.StatusOK, gin.H{"message": "Employee table created successfully"})
 
-		"status":  "success",
-		"message": "Product found",
-		"Emp":    employee,
-	})
+
 }
 
 
+func GetEmploy(c *gin.Context){
 
+	ID := c.Param("empid")
 
+	db := database.DB
+
+	var employee models.Employee
+
+	db.Find(&employee, ID)
+
+	c.JSON(http.StatusOK, gin.H{"message": "Employee table created successfully"})
+
+}

@@ -17,7 +17,7 @@ const (
 
 var DB *gorm.DB
 
-func Database() {
+func ConnectDB() {
 	var err error
 
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)

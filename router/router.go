@@ -1,19 +1,17 @@
 package router
 
 import (
-
-	"github.com/gofiber/fiber/v2"
-
-   c "github.com/KeshikaGupta20/Postgresql_GO/controller"
+	c "github.com/KeshikaGupta20/Postgresql_GO/controller"
+	"github.com/gin-gonic/gin"
 )
 
-func RegisterRoutes(app fiber.Router) {
+func RegisterRoutes(router *gin.Engine) {
 
-	app.Post("/insertpro", c.AddEmployee)
+	router.POST("/insertpro", c.AddEmployee)
 
-	app.Delete("/deletepro/:id", c.DeleteEmployee)
+	router.DELETE("/deletepro/:id", c.DeleteEmployee)
 
-	app.Get("/getpro", c.GetEmployee)
+	router.GET("/getpro", c.GetEmploy)
 
-	app.Put("/updatepro/:id", c.GetEmployees)
+	router.GET("/updatepro/:id", c.GetEmployees)
 }
